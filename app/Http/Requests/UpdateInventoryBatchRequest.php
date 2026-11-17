@@ -34,7 +34,7 @@ class UpdateInventoryBatchRequest extends FormRequest
      */
     public function rules(): array
     {
-        $id = $this->route('id');
+        $id = $this->route('inventory_batch');
 
         return [
             'ingredient_id' => [

@@ -32,8 +32,10 @@ class InventoryBatchService
         $quantity = (float) $data['quantity_kg'];
         $unitCost = (float) $data['unit_cost'];
 
-        $data['total_batch_value'] =
-            $this->calculateTotalBatchValue($quantity, $unitCost);
+        $data['total_batch_value'] = $this->calculateTotalBatchValue(
+            $quantity,
+            $unitCost
+        );
 
         return $data;
     }
@@ -86,17 +88,17 @@ class InventoryBatchService
         if ($batch->quality_status === 'Failed') {
             throw ValidationException::withMessages([
                 'quality_status' =>
-                    'Allocation is not allowed because this batch failed quality inspection.',
+                'Allocation is not allowed because this batch failed quality inspection.',
             ]);
         }
 
         if (
             $batch->expiry_date->startOfDay()
-                ->lessThanOrEqualTo(today()->addDays(7))
+            ->lessThanOrEqualTo(today()->addDays(7))
         ) {
             throw ValidationException::withMessages([
                 'expiry_date' =>
-                    'Allocation is not allowed because this batch expires within 7 days or has already expired.',
+                'Allocation is not allowed because this batch expires within 7 days or has already expired.',
             ]);
         }
     }

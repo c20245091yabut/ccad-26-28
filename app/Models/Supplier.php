@@ -15,6 +15,10 @@ class Supplier extends Model
 
     public function ingredients(): HasMany
     {
-        return $this->hasMany(Ingredient::class, 'supplier_id');
+        return $this->hasMany(
+            Ingredient::class,
+            'supplier_id',
+            'supplier_id'
+        );
     }
 }

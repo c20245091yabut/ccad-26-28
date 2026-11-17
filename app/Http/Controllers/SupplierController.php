@@ -3,63 +3,79 @@
 namespace App\Http\Controllers;
 
 use App\Models\Supplier;
+use App\Models\Ingredient;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class SupplierController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): Response
     {
-        //
+        $suppliers = Supplier::orderBy('supplier_id', 'desc')
+            ->paginate(10);
+
+        return Inertia::render('suppliers/index', [
+            'suppliers' => $suppliers,
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(): Response
     {
-        //
+        return Inertia::render('suppliers/create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'supplier_name' => ['required', 'string', 'max:255'],
+        ]);
+
+        Supplier::create($validated);
+
+        return redirect()
+            ->route('suppliers.index')
+            ->with('success', 'Supplier created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Supplier $supplier)
+    public function edit(Supplier $supplier): Response
     {
-        //
+        return Inertia::render('suppliers/edit', [
+            'supplier' => $supplier,
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Supplier $supplier)
+    public function update(Request $request, Supplier $supplier): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'supplier_name' => ['required', 'string', 'max:255'],
+        ]);
+
+        $supplier->update($validated);
+
+        return redirect()
+            ->route('suppliers.index')
+            ->with('success', 'Supplier updated successfully.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Supplier $supplier)
+    public function destroy(Supplier $supplier): RedirectResponse
     {
-        //
-    }
+        $hasIngredients = Ingredient::where(
+            'supplier_id',
+            $supplier->supplier_id
+        )->exists();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Supplier $supplier)
-    {
-        //
+        if ($hasIngredients) {
+            return redirect()
+                ->route('suppliers.index')
+                ->with('error', 'Cannot delete this supplier because it has associated ingredients.');
+        }
+
+        $supplier->delete();
+
+        return redirect()
+            ->route('suppliers.index')
+            ->with('success', 'Supplier deleted successfully.');
     }
 }

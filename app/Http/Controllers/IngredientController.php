@@ -13,7 +13,9 @@ use Inertia\Response;
 
 class IngredientController extends Controller
 {
-    private IngredientService $ingredientService;
+    public function __construct(
+        private IngredientService $ingredientService
+    ) {}
 
     /**
      * Display paginated ingredients.
@@ -24,7 +26,7 @@ class IngredientController extends Controller
             ->latest()
             ->paginate(10);
 
-        return Inertia::render('Ingredients/Index', [
+        return Inertia::render('ingredients/index', [
             'ingredients' => $ingredients,
         ]);
     }
@@ -34,13 +36,13 @@ class IngredientController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Ingredients/Create', [
+        return Inertia::render('ingredients/create', [
             'suppliers' => Supplier::orderBy('supplier_name')->get(),
         ]);
     }
 
     /**
-     * Store a newly created ingredient.
+     * Store a new ingredient.
      */
     public function store(
         StoreIngredientRequest $request

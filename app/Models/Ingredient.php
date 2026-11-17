@@ -18,11 +18,19 @@ class Ingredient extends Model
 
     public function supplier(): BelongsTo
     {
-        return $this->belongsTo(Supplier::class, 'supplier_id');
+        return $this->belongsTo(
+            Supplier::class,
+            'supplier_id',
+            'supplier_id'
+        );
     }
 
     public function inventoryBatches(): HasMany
     {
-        return $this->hasMany(InventoryBatch::class, 'ingredient_id');
+        return $this->hasMany(
+            InventoryBatch::class,
+            'ingredient_id',
+            'ingredient_id'
+        );
     }
 }

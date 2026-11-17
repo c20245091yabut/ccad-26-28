@@ -11,15 +11,15 @@ class InventoryBatch extends Model
     protected $primaryKey = 'batch_id';
 
     protected $fillable = [
-        'ingredient_id',
-        'warehouse_id',
-        'batch_number',
-        'quantity_kg',
-        'unit_cost',
-        'expiry_date',
-        'quality_status',
-    ];
-
+    'ingredient_id',
+    'warehouse_id',
+    'batch_number',
+    'quantity_kg',
+    'unit_cost',
+    'expiry_date',
+    'total_batch_value',
+    'quality_status',
+];
     protected function casts(): array
     {
         return [
