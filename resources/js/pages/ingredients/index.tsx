@@ -51,8 +51,7 @@ export default function Index({ ingredients }: Props) {
                     <table className="w-full text-left text-sm">
                         <thead className="bg-muted">
                             <tr>
-                                <th className="p-4">ID</th>
-                                <th className="p-4">Ingredient Code</th>
+                                <th className="p-4">Product</th>
                                 <th className="p-4">Ingredient Name</th>
                                 <th className="p-4">Supplier</th>
                             </tr>
@@ -61,10 +60,18 @@ export default function Index({ ingredients }: Props) {
                         <tbody>
                             {ingredients.data.length > 0 ? (
                                 ingredients.data.map((item) => (
-                                    <tr key={item.ingredient_id} className="border-t">
-                                        <td className="p-4">{item.ingredient_id}</td>
-                                        <td className="p-4">{item.ingredient_code}</td>
-                                        <td className="p-4">{item.ingredient_name}</td>
+                                    <tr
+                                        key={item.ingredient_id}
+                                        className="border-t"
+                                    >
+                                        <td className="p-4">
+                                            {item.ingredient_code}
+                                        </td>
+
+                                        <td className="p-4">
+                                            {item.ingredient_name}
+                                        </td>
+
                                         <td className="p-4">
                                             {item.supplier?.supplier_name ?? 'No supplier'}
                                         </td>
@@ -72,7 +79,7 @@ export default function Index({ ingredients }: Props) {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={4} className="p-8 text-center">
+                                    <td colSpan={3} className="p-8 text-center">
                                         <Package className="mx-auto mb-2" />
                                         No ingredients found.
                                     </td>

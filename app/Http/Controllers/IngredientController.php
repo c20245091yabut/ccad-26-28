@@ -22,7 +22,7 @@ class IngredientController extends Controller
      */
     public function index(): Response
     {
-        $ingredients = Ingredient::with('supplier')
+        $ingredients = Ingredient::with('supplier') // need furhter optimization
             ->latest()
             ->paginate(10);
 
@@ -37,7 +37,7 @@ class IngredientController extends Controller
     public function create(): Response
     {
         return Inertia::render('ingredients/create', [
-            'suppliers' => Supplier::orderBy('supplier_name')->get(),
+            'suppliers' => Supplier::orderBy('supplier_name')->get(), // need furhter optimization
         ]);
     }
 

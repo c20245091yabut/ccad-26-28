@@ -1,4 +1,3 @@
-
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, router } from '@inertiajs/react';
 import { Plus, Truck, Pencil, Trash2 } from 'lucide-react';
@@ -59,9 +58,6 @@ export default function Index({ suppliers }: Props) {
                         <thead className="bg-muted">
                             <tr>
                                 <th className="p-3 text-left font-semibold">
-                                    Supplier ID
-                                </th>
-                                <th className="p-3 text-left font-semibold">
                                     Supplier Name
                                 </th>
                                 <th className="p-3 text-left font-semibold">
@@ -77,10 +73,6 @@ export default function Index({ suppliers }: Props) {
                                         key={supplier.supplier_id}
                                         className="border-t"
                                     >
-                                        <td className="p-3">
-                                            {supplier.supplier_id}
-                                        </td>
-
                                         <td className="p-3 font-medium">
                                             {supplier.supplier_name}
                                         </td>
@@ -115,7 +107,7 @@ export default function Index({ suppliers }: Props) {
                             ) : (
                                 <tr>
                                     <td
-                                        colSpan={3}
+                                        colSpan={2}
                                         className="p-8 text-center text-muted-foreground"
                                     >
                                         <Truck className="mx-auto mb-2" />
@@ -133,13 +125,15 @@ export default function Index({ suppliers }: Props) {
                             key={index}
                             href={link.url ?? '#'}
                             preserveScroll
-                            className={`rounded border px-3 py-2 text-sm ${link.active
+                            className={`rounded border px-3 py-2 text-sm ${
+                                link.active
                                     ? 'bg-primary text-primary-foreground'
                                     : ''
-                                } ${!link.url
+                            } ${
+                                !link.url
                                     ? 'pointer-events-none opacity-50'
                                     : ''
-                                }`}
+                            }`}
                             dangerouslySetInnerHTML={{
                                 __html: link.label,
                             }}

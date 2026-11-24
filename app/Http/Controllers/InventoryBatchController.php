@@ -31,11 +31,12 @@ class InventoryBatchController extends Controller
         $search = $request->input('search');
 
         $query = InventoryBatch::with([
-            'ingredient',
-            'warehouse',
-            'qualityInspections',
+            'ingredient', // need furhter optimization
+            'warehouse', // need furhter optimization
+            'qualityInspections', // need furhter optimization
         ]);
 
+        //trnsfer all busines logic in n ur service class
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('batch_number', 'like', "%{$search}%")
@@ -73,8 +74,8 @@ class InventoryBatchController extends Controller
     public function create(): Response
     {
         return Inertia::render('inventory-batches/create', [
-            'ingredients' => Ingredient::orderBy('ingredient_name')->get(),
-            'warehouses' => Warehouse::orderBy('warehouse_name')->get(),
+            'ingredients' => Ingredient::orderBy('ingredient_name')->get(), // need furhter optimization
+            'warehouses' => Warehouse::orderBy('warehouse_name')->get(), // need furhter optimization
         ]);
     }
 
@@ -99,14 +100,14 @@ class InventoryBatchController extends Controller
     public function edit(int $id): Response
     {
         $batch = InventoryBatch::with([
-            'ingredient',
-            'warehouse',
+            'ingredient', // need furhter optimization
+            'warehouse', // need furhter optimization
         ])->findOrFail($id);
 
         return Inertia::render('inventory-batches/edit', [
             'batch' => $batch,
-            'ingredients' => Ingredient::orderBy('ingredient_name')->get(),
-            'warehouses' => Warehouse::orderBy('warehouse_name')->get(),
+            'ingredients' => Ingredient::orderBy('ingredient_name')->get(), // need furhter optimization
+            'warehouses' => Warehouse::orderBy('warehouse_name')->get(), // need furhter optimization
         ]);
     }
 

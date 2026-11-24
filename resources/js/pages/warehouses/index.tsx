@@ -58,9 +58,6 @@ export default function Index({ warehouses }: Props) {
                         <thead className="bg-muted">
                             <tr>
                                 <th className="p-3 text-left font-semibold">
-                                    Warehouse ID
-                                </th>
-                                <th className="p-3 text-left font-semibold">
                                     Warehouse Name
                                 </th>
                                 <th className="p-3 text-left font-semibold">
@@ -76,10 +73,6 @@ export default function Index({ warehouses }: Props) {
                                         key={warehouse.warehouse_id}
                                         className="border-t"
                                     >
-                                        <td className="p-3">
-                                            {warehouse.warehouse_id}
-                                        </td>
-
                                         <td className="p-3 font-medium">
                                             {warehouse.warehouse_name}
                                         </td>
@@ -114,7 +107,7 @@ export default function Index({ warehouses }: Props) {
                             ) : (
                                 <tr>
                                     <td
-                                        colSpan={3}
+                                        colSpan={2}
                                         className="p-8 text-center text-muted-foreground"
                                     >
                                         <Warehouse className="mx-auto mb-2" />
@@ -132,13 +125,15 @@ export default function Index({ warehouses }: Props) {
                             key={index}
                             href={link.url ?? '#'}
                             preserveScroll
-                            className={`rounded border px-3 py-2 text-sm ${link.active
+                            className={`rounded border px-3 py-2 text-sm ${
+                                link.active
                                     ? 'bg-primary text-primary-foreground'
                                     : ''
-                                } ${!link.url
+                            } ${
+                                !link.url
                                     ? 'pointer-events-none opacity-50'
                                     : ''
-                                }`}
+                            }`}
                             dangerouslySetInnerHTML={{
                                 __html: link.label,
                             }}

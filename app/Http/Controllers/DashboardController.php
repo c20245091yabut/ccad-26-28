@@ -9,7 +9,9 @@ use Inertia\Inertia;
 class DashboardController extends Controller
 {
     public function index()
-    {
+    { 
+
+        // need furhter optimization
         return Inertia::render('dashboard', [
             'totalIngredients' => Ingredient::count(),
 
