@@ -9,6 +9,7 @@ use App\Http\Controllers\InventoryBatchController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\QualityInspectionController;
+use App\Http\Controllers\InspectorController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -26,6 +27,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('suppliers', SupplierController::class);
     Route::resource('warehouses', WarehouseController::class);
     Route::resource('quality-inspections', QualityInspectionController::class);
+    Route::resource('inspectors', InspectorController::class);
 
 });
 

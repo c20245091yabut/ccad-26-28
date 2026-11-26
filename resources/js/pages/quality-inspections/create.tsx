@@ -16,12 +16,16 @@ interface Batch {
 
 interface Props {
     batches: Batch[];
+    inspectors: {
+        inspector_id: number;
+        full_name: string;
+    }[];
 }
 
-export default function Create({ batches }: Props) {
+export default function Create({ batches, inspectors }: Props) {
     const { data, setData, post, processing, errors } = useForm({
         batch_id: '',
-        inspector_name: '',
+        inspector_id: '',
         inspection_date: new Date().toISOString().slice(0, 10),
         quality_status: 'Pending',
         remarks: '',
@@ -93,19 +97,28 @@ export default function Create({ batches }: Props) {
 
                     <div>
                         <label className="mb-2 block text-sm font-medium">
-                            Inspector Name
+                            Inspector
                         </label>
 
-                        <input
-                            value={data.inspector_name}
-                            onChange={e => setData('inspector_name', e.target.value)}
-                            placeholder="Enter inspector name"
+                        <select
+                            value={data.inspector_id}
+                            onChange={e => setData('inspector_id', e.target.value)}
                             className="w-full rounded-lg border bg-background px-3 py-2"
-                        />
+                        >
+                            <option value="">Select active inspector</option>
+                            {inspectors.map(inspector => (
+                                <option
+                                    key={inspector.inspector_id}
+                                    value={inspector.inspector_id}
+                                >
+                                    {inspector.full_name}
+                                </option>
+                            ))}
+                        </select>
 
-                        {errors.inspector_name && (
+                        {errors.inspector_id && (
                             <p className="mt-1 text-sm text-red-500">
-                                {errors.inspector_name}
+                                {errors.inspector_id}
                             </p>
                         )}
                     </div>

@@ -6,6 +6,10 @@ interface Inspection {
     inspection_id: number;
     batch_id: number;
     inspector_name: string;
+    inspector?: {
+        inspector_id: number;
+        full_name: string;
+    };
     inspection_date: string;
     quality_status: string;
     remarks: string | null;
@@ -85,7 +89,9 @@ export default function Index({ inspections }: Props) {
                                             {item.inventory_batch?.ingredient?.ingredient_name ?? 'N/A'}
                                         </td>
 
-                                        <td className="p-4">{item.inspector_name}</td>
+                                        <td className="p-4">
+                                            {item.inspector?.full_name ?? item.inspector_name}
+                                        </td>
 
                                         <td className="p-4">
                                             {String(item.inspection_date).slice(0, 10)}

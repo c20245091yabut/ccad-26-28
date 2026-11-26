@@ -4,9 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreInventoryBatchRequest;
 use App\Http\Requests\UpdateInventoryBatchRequest;
-use App\Models\Ingredient;
-use App\Models\InventoryBatch;
-use App\Models\Warehouse;
 use App\Services\InventoryBatchService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
@@ -15,13 +12,9 @@ use Inertia\Response;
 
 class InventoryBatchController extends Controller
 {
-    private InventoryBatchService $inventoryBatchService;
-
     public function __construct(
-        InventoryBatchService $inventoryBatchService
-    ) {
-        $this->inventoryBatchService = $inventoryBatchService;
-    }
+        private InventoryBatchService $inventoryBatchService
+    ) {}
 
     /**
      * Display and search inventory batches.
@@ -30,37 +23,9 @@ class InventoryBatchController extends Controller
     {
         $search = $request->input('search');
 
-        $query = InventoryBatch::with([
-            'ingredient', // need furhter optimization
-            'warehouse', // need furhter optimization
-            'qualityInspections', // need furhter optimization
-        ]);
+        $search = is_string($search) ? $search : null;
 
-        //trnsfer all busines logic in n ur service class
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('batch_number', 'like', "%{$search}%")
-                    ->orWhereHas('ingredient', function ($ingredient) use ($search) {
-                        $ingredient->where(
-                            'ingredient_name',
-                            'like',
-                            "%{$search}%"
-                        );
-                    })
-                    ->orWhereHas('warehouse', function ($warehouse) use ($search) {
-                        $warehouse->where(
-                            'warehouse_name',
-                            'like',
-                            "%{$search}%"
-                        );
-                    });
-            });
-        }
-
-        $batches = $query
-            ->orderBy('batch_number', 'asc')
-            ->paginate(10)
-            ->withQueryString();
+        $batches = $this->inventoryBatchService->getAll($search);
 
         return Inertia::render('inventory-batches/index', [
             'batches' => $batches,
@@ -73,10 +38,10 @@ class InventoryBatchController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('inventory-batches/create', [
-            'ingredients' => Ingredient::orderBy('ingredient_name')->get(), // need furhter optimization
-            'warehouses' => Warehouse::orderBy('warehouse_name')->get(), // need furhter optimization
-        ]);
+        return Inertia::render(
+            'inventory-batches/create',
+            $this->inventoryBatchService->getFormOptions()
+        );
     }
 
     /**
@@ -99,15 +64,9 @@ class InventoryBatchController extends Controller
      */
     public function edit(int $id): Response
     {
-        $batch = InventoryBatch::with([
-            'ingredient', // need furhter optimization
-            'warehouse', // need furhter optimization
-        ])->findOrFail($id);
-
         return Inertia::render('inventory-batches/edit', [
-            'batch' => $batch,
-            'ingredients' => Ingredient::orderBy('ingredient_name')->get(), // need furhter optimization
-            'warehouses' => Warehouse::orderBy('warehouse_name')->get(), // need furhter optimization
+            'batch' => $this->inventoryBatchService->findForEdit($id),
+            ...$this->inventoryBatchService->getFormOptions(),
         ]);
     }
 
@@ -116,10 +75,10 @@ class InventoryBatchController extends Controller
      */
     public function update(
         UpdateInventoryBatchRequest $request,
-        $id
+        int $id
     ): RedirectResponse {
         $this->inventoryBatchService->update(
-            (int) $id,
+            $id,
             $request->validated()
         );
 
@@ -133,9 +92,9 @@ class InventoryBatchController extends Controller
      */
     public function destroy(int $id): RedirectResponse
     {
-        $batch = InventoryBatch::findOrFail($id);
+        $deleted = $this->inventoryBatchService->delete($id);
 
-        if ($batch->qualityInspections()->exists()) {
+        if (!$deleted) {
             return redirect()
                 ->route('inventory-batches.index')
                 ->with(
@@ -143,8 +102,6 @@ class InventoryBatchController extends Controller
                     'Cannot delete this batch because it has existing quality inspection records.'
                 );
         }
-
-        $batch->delete();
 
         return redirect()
             ->route('inventory-batches.index')

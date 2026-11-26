@@ -18,6 +18,7 @@ interface Inspection {
     inspection_id: number;
     batch_id: number;
     inspector_name: string;
+    inspector_id: number | null;
     inspection_date: string;
     quality_status: string;
     remarks: string | null;
@@ -26,12 +27,16 @@ interface Inspection {
 interface Props {
     inspection: Inspection;
     batches: Batch[];
+    inspectors: {
+        inspector_id: number;
+        full_name: string;
+    }[];
 }
 
-export default function Edit({ inspection, batches }: Props) {
+export default function Edit({ inspection, batches, inspectors }: Props) {
     const { data, setData, put, processing, errors } = useForm({
         batch_id: String(inspection.batch_id),
-        inspector_name: inspection.inspector_name,
+        inspector_id: inspection.inspector_id ? String(inspection.inspector_id) : '',
         inspection_date: String(inspection.inspection_date).slice(0, 10),
         quality_status: inspection.quality_status,
         remarks: inspection.remarks ?? '',
@@ -107,19 +112,28 @@ export default function Edit({ inspection, batches }: Props) {
 
                     <div>
                         <label className="mb-2 block text-sm font-medium">
-                            Inspector Name
+                            Inspector
                         </label>
 
-                        <input
-                            value={data.inspector_name}
-                            onChange={e => setData('inspector_name', e.target.value)}
-                            placeholder="Enter inspector name"
+                        <select
+                            value={data.inspector_id}
+                            onChange={e => setData('inspector_id', e.target.value)}
                             className="w-full rounded-lg border bg-background px-3 py-2"
-                        />
+                        >
+                            <option value="">Select inspector</option>
+                            {inspectors.map(inspector => (
+                                <option
+                                    key={inspector.inspector_id}
+                                    value={inspector.inspector_id}
+                                >
+                                    {inspector.full_name}
+                                </option>
+                            ))}
+                        </select>
 
-                        {errors.inspector_name && (
+                        {errors.inspector_id && (
                             <p className="mt-1 text-sm text-red-500">
-                                {errors.inspector_name}
+                                {errors.inspector_id}
                             </p>
                         )}
                     </div>

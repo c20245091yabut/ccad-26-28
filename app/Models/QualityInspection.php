@@ -11,6 +11,7 @@ class QualityInspection extends Model
 
     protected $fillable = [
         'batch_id',
+        'inspector_id',
         'inspector_name',
         'inspection_date',
         'quality_status',
@@ -29,6 +30,15 @@ class QualityInspection extends Model
         return $this->belongsTo(
             InventoryBatch::class,
             'batch_id'
+        );
+    }
+
+    public function inspector(): BelongsTo
+    {
+        return $this->belongsTo(
+            Inspector::class,
+            'inspector_id',
+            'inspector_id'
         );
     }
 }

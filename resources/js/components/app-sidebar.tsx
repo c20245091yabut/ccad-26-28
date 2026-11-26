@@ -19,6 +19,7 @@ import {
     Truck,
     Warehouse,
     ClipboardCheck,
+    ShieldCheck,
     BookOpen,
     Folder,
 } from 'lucide-react';
@@ -55,6 +56,11 @@ const mainNavItems: NavItem[] = [
         title: 'Quality Inspections',
         url: '/quality-inspections',
         icon: ClipboardCheck,
+    },
+    {
+        title: 'Inspectors',
+        url: '/inspectors',
+        icon: ShieldCheck,
     },
 ];
 

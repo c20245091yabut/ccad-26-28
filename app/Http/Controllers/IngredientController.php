@@ -18,11 +18,18 @@ class IngredientController extends Controller
     ) {}
 
     /**
-     * Display paginated ingredients.
+     * Display paginated ingredients with supplier information.
      */
     public function index(): Response
     {
-        $ingredients = Ingredient::with('supplier') // need furhter optimization
+        $ingredients = Ingredient::query()
+            ->select([
+                'ingredient_id',
+                'supplier_id',
+                'ingredient_code',
+                'ingredient_name',
+            ])
+            ->with('supplier:supplier_id,supplier_name')
             ->latest()
             ->paginate(10);
 
@@ -36,8 +43,16 @@ class IngredientController extends Controller
      */
     public function create(): Response
     {
+        $suppliers = Supplier::query()
+            ->select([
+                'supplier_id',
+                'supplier_name',
+            ])
+            ->orderBy('supplier_name')
+            ->get();
+
         return Inertia::render('ingredients/create', [
-            'suppliers' => Supplier::orderBy('supplier_name')->get(), // need furhter optimization
+            'suppliers' => $suppliers,
         ]);
     }
 
@@ -61,10 +76,10 @@ class IngredientController extends Controller
      */
     public function update(
         UpdateIngredientRequest $request,
-        $id
+        int $id
     ): RedirectResponse {
         $this->ingredientService->update(
-            (int) $id,
+            $id,
             $request->validated()
         );
 
